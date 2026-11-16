@@ -4,7 +4,7 @@ title: '#4471 · three problems, three tickets'
 owner: Łukasz Kopociński
 status: living
 reviewed: 2026-11-16
-signature: Łukasz Kopociński
+signature: v1.eyJzdWIiOiIyODc3IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTQ4Njg4MzMsImV4cCI6MTc5NDk1NTIzM30.yzCo3cPY1uZlKYZwF2vm8CvLaWF8LbD639Xt7WsTeDg
 ---
 
 <script>
