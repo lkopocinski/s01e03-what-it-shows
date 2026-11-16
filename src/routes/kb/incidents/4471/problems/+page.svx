@@ -1,0 +1,56 @@
+---
+layout: runbook
+title: '#4471 · three problems, three tickets'
+owner: Łukasz Kopociński
+status: draft
+reviewed: 2026-11-16
+signature: Łukasz Kopociński
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/lkopocinski/s01e03-what-it-shows/issues';
+  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` };
+</script>
+
+[#4471](/kb/incidents/4471) is marked *known: one issue, one fix queued*. Read the bodies, not
+the subjects, and it holds three problems. The queued parser fix closes only one of them.
+
+<Callout kind="warn">
+Not one issue. Each problem below needs its own fix and has its own ticket.
+</Callout>
+
+<ProblemTable ticket={4471} {tickets} />
+
+## How to tell them apart
+
+- **`parser`**: the booked date and the date we sent are the same two numbers, day and month
+  swapped (7 April → 4 July). It happens to every tenant that writes the day first, through
+  any channel. The queued parser fix is for this one.
+- **`hint`**: the same swap, but only through the **booking form** of tenants on `booking-v3`.
+  That form prints `MM/DD/YYYY` under its date field, so people type the month first, and the form
+  then reads it day first. The parser fix does not reach it; the form's hint has to change.
+  [#4471's own table](/kb/incidents/4471) already shows it as *no ticket of its own*.
+- **`one-day`**: the date lands one day off, not swapped: Tuesday became Monday, a meeting fell
+  on different days in Lisbon and Toronto, *only June*, an invite older than its booking. No
+  day/month swap gives a one-day move. That points to a timezone conversion. The desk already read
+  these the same way (`desk-notes.json`), but `causes.ts` files them under `parser` by tenant, so
+  they had no ticket.
+
+## Why one ticket hid them
+
+- [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on subject alone. "Wrong day"
+  reads the same whatever the cause.
+- Intake tags come from the reporter's browser, not the tenant, and disagree with the cause on
+  dozens of these reports. Count by tenant and channel, then read the bodies.
+- The export repeats some reports. Count unique ids.
+
+## What changes on the desk
+
+New date reports go to the ticket of their problem, not to #4471. Keep #4471 as the parser
+ticket only.
+
+<RenderStamp {signature} />
