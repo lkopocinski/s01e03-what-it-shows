@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 · three problems, three tickets'
 owner: Łukasz Kopociński
-status: draft
+status: living
 reviewed: 2026-11-16
 signature: Łukasz Kopociński
 ---
@@ -13,14 +13,20 @@ signature: Łukasz Kopociński
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 
   const repo = 'https://github.com/lkopocinski/s01e03-what-it-shows/issues';
-  const tickets = { parser: `${repo}/1`, hint: `${repo}/2`, 'one-day': `${repo}/3` };
+  const tickets = {
+    parser: { url: `${repo}/1`, state: 'fixed', what: 'shared parser read dates month first · fix(dates): parse dd/mm for eu locales' },
+    hint: { url: `${repo}/2`, state: "won't fix", what: 'booking-v3 form hint said MM/DD/YYYY · form retired' },
+    'one-day': { url: `${repo}/3`, state: 'open', what: 'date lands one day off, not swapped · timezone shift, no fix yet' },
+  };
 </script>
 
-[#4471](/kb/incidents/4471) is marked *known: one issue, one fix queued*. Read the bodies, not
-the subjects, and it holds three problems. The queued parser fix closes only one of them.
+[#4471](/kb/incidents/4471) was merged as one issue and closed on 5 October. Read the bodies,
+not the subjects, and it held three problems. Engineering fixed the parser and retired the
+booking-v3 form. The third problem is still open.
 
 <Callout kind="warn">
-Not one issue. Each problem below needs its own fix and has its own ticket.
+#4471 is closed, but one-day moves still have no fix. New reports of a date one day off go to
+the open ticket below, not to #4471.
 </Callout>
 
 <ProblemTable ticket={4471} {tickets} />
@@ -28,17 +34,17 @@ Not one issue. Each problem below needs its own fix and has its own ticket.
 ## How to tell them apart
 
 - **`parser`**: the booked date and the date we sent are the same two numbers, day and month
-  swapped (7 April → 4 July). It happens to every tenant that writes the day first, through
-  any channel. The queued parser fix is for this one.
+  swapped (7 April → 4 July). It happened to every tenant that writes the day first, through
+  any channel. Fixed.
 - **`hint`**: the same swap, but only through the **booking form** of tenants on `booking-v3`.
-  That form prints `MM/DD/YYYY` under its date field, so people type the month first, and the form
-  then reads it day first. The parser fix does not reach it; the form's hint has to change.
-  [#4471's own table](/kb/incidents/4471) already shows it as *no ticket of its own*.
+  That form printed `MM/DD/YYYY` under its date field, so people typed the month first, and the
+  form then read it day first. The parser fix never reached it. The form is retired.
+  [#4471's own table](/kb/incidents/4471) already showed it as *no ticket of its own*.
 - **`one-day`**: the date lands one day off, not swapped: Tuesday became Monday, a meeting fell
   on different days in Lisbon and Toronto, *only June*, an invite older than its booking. No
-  day/month swap gives a one-day move. That points to a timezone conversion. The desk already read
-  these the same way (`desk-notes.json`), but `causes.ts` files them under `parser` by tenant, so
-  they had no ticket.
+  day/month swap gives a one-day move, so neither fix touches it. It points to a timezone
+  conversion. The desk read these the same way (`desk-notes.json`) and files them under `parser`
+  by tenant, so they are counted there too.
 
 ## Why one ticket hid them
 
@@ -47,10 +53,5 @@ Not one issue. Each problem below needs its own fix and has its own ticket.
 - Intake tags come from the reporter's browser, not the tenant, and disagree with the cause on
   dozens of these reports. Count by tenant and channel, then read the bodies.
 - The export repeats some reports. Count unique ids.
-
-## What changes on the desk
-
-New date reports go to the ticket of their problem, not to #4471. Keep #4471 as the parser
-ticket only.
 
 <RenderStamp {signature} />
